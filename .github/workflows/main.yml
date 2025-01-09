@@ -1,0 +1,29 @@
+name: Auto Commit Every 5 Minutes
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"   # 每五分钟触发一次
+  workflow_dispatch:   # 允许手动触发此工作流
+
+jobs:
+  auto-commit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Git
+        run: |
+          git config --global user.name "astonbute"
+          git config --global user.email "astonbute@gmai.com"
+
+      - name: Make a change
+        run: |
+          echo "Auto commit at $(date)" >> auto_commit.txt
+          git add auto_commit.txt
+          git commit -m "Auto commit at $(date)"
+          git push origin main # 根据你使用的分支修改 main 为对应分支
+
+      - name: Clean up
+        run: rm auto_commit.txt  # 删除修改的文件（如果不想保留修改的话）
