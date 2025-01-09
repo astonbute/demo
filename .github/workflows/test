@@ -1,7 +1,7 @@
 name: Auto Commit for Last Year Daily
 
 on:
-  workflow_dispatch:   # 手动触发工作流
+  workflow_dispatch:   # 手动触发工作流1
 
 jobs:
   auto-commit:
