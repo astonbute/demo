@@ -1,0 +1,40 @@
+name: Auto Commit for Last Year Daily
+
+on:
+  workflow_dispatch:   # 手动触发工作流
+
+jobs:
+  auto-commit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Git
+        run: |
+          git config --global user.name "astonbute"
+          git config --global user.email "astonbute@gmail.com"
+
+      - name: Simulate Daily Commits for the Past Year
+        run: |
+          # 获取当前时间并计算过去一年的时间范围
+          for i in {0..364}
+          do
+            # 计算每一天的日期，格式为 YYYY-MM-DD
+            commit_date=$(date -u -d "$i days ago" +%Y-%m-%d)
+            echo "Simulating commit for: $commit_date"
+            
+            # 创建或更新一个文件（例如 auto_commit.txt）
+            echo "Auto commit for $commit_date at $(date)" > auto_commit.txt
+            
+            # 设置提交的日期为 $commit_date
+            GIT_AUTHOR_DATE="$commit_date 12:00:00" GIT_COMMITTER_DATE="$commit_date 12:00:00" git add auto_commit.txt
+            GIT_AUTHOR_DATE="$commit_date 12:00:00" GIT_COMMITTER_DATE="$commit_date 12:00:00" git commit -m "Auto commit for $commit_date"
+            
+            # 可选：添加延迟，避免触发速率限制
+            sleep 1
+          done
+
+          # 推送所有提交到远程仓库
+          git push origin main --force  # 根据实际分支名称替换 main
